@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${pc.charName} + ' - Character Sheet'"></title>
+</head>
+<body>
+
+<a href="/characters/list">Back to Character List</a>
+
+<h1 th:text="${pc.charName}"></h1>
+<h3>Level <span th:text="${pc.charLevel}"></span></h3>
+
+<hr>
+
+<h2>Basic Info</h2>
+<p><strong>Species:</strong> <span th:text="${pc.species != null ? pc.species.speciesName : 'None'}"></span></p>
+<p><strong>Background:</strong> <span th:text="${pc.background != null ? pc.background.backgroundName : 'None'}"></span></p>
+
+<h2>Classes</h2>
+<ul>
+    <li th:each="c : ${pc.classes}" th:text="${c.className}"></li>
+</ul>
+
+<hr>
+
+<h2>Ability Scores</h2>
+<ul>
+    <li>STR: <span th:text="${pc.STR}"></span></li>
+    <li>DEX: <span th:text="${pc.DEX}"></span></li>
+    <li>CON: <span th:text="${pc.CON}"></span></li>
+    <li>INT: <span th:text="${pc.INTEL}"></span></li>
+    <li>WIS: <span th:text="${pc.WIS}"></span></li>
+    <li>CHA: <span th:text="${pc.CHA}"></span></li>
+</ul>
+
+<hr>
+
+<h2>Feats</h2>
+<ul>
+    <li th:each="f : ${pc.feats}" th:text="${f.featName}"></li>
+</ul>
+
+<h2>Weapons</h2>
+<ul>
+    <li th:each="w : ${pc.weapons}" th:text="${w.weaponName}"></li>
+</ul>
+
+<hr>
+
+<h2>Prepared Spells</h2>
+<ul>
+    <li th:each="s : ${pc.preparedSpells}" th:text="${s.spellName}"></li>
+</ul>
+
+<!-- ========================= -->
+<!--   PREPARED SPELLS SECTION -->
+<!-- ========================= -->
+
+<h2>Prepared Spells</h2>
+
+<!-- Display currently prepared spells -->
+<div>
+    <h4>Currently Prepared:</h4>
+    <ul>
+        <li th:each="s : ${pc.preparedSpells}"
+            th:text="${s.spellName}"></li>
+    </ul>
+</div>
+
+<!-- Form to update prepared spells -->
+<form th:action="@{'/characters/' + ${pc.charID} + '/prepareSpells'}" method="post">
+
+    <!-- CANTRIP -->
+    <label for="preparedCantrip"><strong>Prepared Cantrip:</strong></label>
+    <select id="preparedCantrip" name="preparedCantrip">
+        <option value="">-- Select Cantrip --</option>
+        <th:block th:each="spell : ${cantrips}">
+            <option th:value="${spell.spellName}"
+                    th:text="${spell.spellName}"></option>
+        </th:block>
+    </select>
+
+    <br/><br/>
+
+    <!-- LEVEL 1 -->
+    <label for="preparedLevel1"><strong>Prepared Level 1 Spell:</strong></label>
+    <select id="preparedLevel1" name="preparedLevel1">
+        <option value="">-- Select Level 1 Spell --</option>
+        <th:block th:each="spell : ${level1spells}">
+            <option th:value="${spell.spellName}"
+                    th:text="${spell.spellName}"></option>
+        </th:block>
+    </select>
+
+    <br/><br/>
+
+    <!-- LEVEL 2 -->
+    <label for="preparedLevel2"><strong>Prepared Level 2 Spell:</strong></label>
+    <select id="preparedLevel2" name="preparedLevel2">
+        <option value="">-- Select Level 2 Spell --</option>
+        <th:block th:each="spell : ${level2spells}">
+            <option th:value="${spell.spellName}"
+                    th:text="${spell.spellName}"></option>
+        </th:block>
+    </select>
+
+    <br/><br/>
+
+    <button type="submit">Save Prepared Spells</button>
+</form>
+
+<h2>Class Spell List</h2>
+<ul>
+    <li th:each="c : ${pc.classes}">
+        <strong th:text="${c.className}"></strong>
+        <ul>
+            <li th:each="s : ${c.spells}" th:text="${s.spellName}"></li>
+        </ul>
+    </li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<a href="/characters">Back to Dashboard</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Level</th>
+        <th>Class</th>
+        <th>Species</th>
+        <th>Background</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <a href="/characters">Back to Dashboard</a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Level</th>
+            <th>Class</th>
+            <th>Species</th>
+            <th>Background</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="pc : ${characters}">
+            <td th:text="${pc.charName}"></td>
+            <td th:text="${pc.charLevel}"></td>
+
+            <!-- Show first class or None -->
+            <td th:text="${#lists.isEmpty(pc.classes) ? 'None' : pc.classes[0].className}"></td>
+
+            <!-- Species -->
+            <td th:text="${pc.species != null ? pc.species.speciesName : 'None'}"></td>
+
+            <!-- Background -->
+            <td th:text="${pc.background != null ? pc.background.backgroundName : 'None'}"></td>
+
+            <td>
+                <a th:href="@{'/characters/' + ${pc.charID}}">View</a>
+                <a th:href="@{'/characters/edit/' + ${pc.charID}}">Edit</a>
+                <a th:href="@{'/characters/delete/' + ${pc.charID}}">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>

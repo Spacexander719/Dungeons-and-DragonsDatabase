@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
     <title>Edit Character</title>
 </head>
@@ -12,71 +12,102 @@
     <input type="hidden" th:field="*{charID}" />
 
     <label>Name:</label>
-    <input type="text" th:field="*{charName}" required />
+    <label>
+        <input type="text" th:field="*{charName}" required />
+    </label>
 
     <label>Level:</label>
-    <input type="number" th:field="*{charLevel}" min="1" max="20" required />
+    <label>
+        <input type="number" th:field="*{charLevel}" min="1" max="20" required />
+    </label>
+
+
+
 
     <label>STR:</label>
-    <input type="number" th:field="*{STR}" required />
+    <label>
+        <input type="number" th:field="*{STR}" required />
+    </label>
 
     <label>DEX:</label>
-    <input type="number" th:field="*{DEX}" required />
+    <label>
+        <input type="number" th:field="*{DEX}" required />
+    </label>
 
     <label>CON:</label>
-    <input type="number" th:field="*{CON}" required />
+    <label>
+        <input type="number" th:field="*{CON}" required />
+    </label>
 
     <label>INT:</label>
-    <input type="number" th:field="*{INTEL}" required />
+    <label>
+        <input type="number" th:field="*{INTEL}" required />
+    </label>
 
     <label>WIS:</label>
-    <input type="number" th:field="*{WIS}" required />
+    <label>
+        <input type="number" th:field="*{WIS}" required />
+    </label>
 
     <label>CHA:</label>
-    <input type="number" th:field="*{CHA}" required />
+    <label>
+        <input type="number" th:field="*{CHA}" required />
+    </label>
 
     <label>Max HP:</label>
-    <input type="number" th:field="*{maxHP}" required />
+    <label>
+        <input type="number" th:field="*{maxHP}" required />
+    </label>
 
     <label>Class:</label>
-    <select th:field="*{classes}" multiple size="5">
-        <option th:each="c : ${classes}"
-                th:value="${c}"
-                th:text="${c.className}">
-        </option>
-    </select>
+    <label>
+        <select th:field="*{classes}" multiple size="5">
+            <option th:each="c : ${classes}"
+                    th:value="${c}"
+                    th:text="${c.className}">
+            </option>
+        </select>
+    </label>
 
     <label>Species:</label>
-    <select th:field="*{species}">
-        <option th:each="s : ${species}"
-                th:value="${s}"
-                th:text="${s.speciesName}">
-        </option>
-    </select>
+    <label>
+        <select th:field="*{species}">
+            <option th:each="s : ${species}"
+                    th:value="${s}"
+                    th:text="${s.speciesName}">
+            </option>
+        </select>
+    </label>
 
     <label>Feats:</label>
-    <select th:field="*{feats}" multiple size="5">
-        <option th:each="f : ${feats}"
-                th:value="${f}"
-                th:text="${f.featName}">
-        </option>
-    </select>
+    <label>
+        <select th:field="*{feats}" multiple size="5">
+            <option th:each="f : ${feats}"
+                    th:value="${f}"
+                    th:text="${f.featName}">
+            </option>
+        </select>
+    </label>
 
     <label>Background:</label>
-    <select th:field="*{background}">
-        <option th:each="b : ${backgrounds}"
-                th:value="${b}"
-                th:text="${b.backgroundName}">
-        </option>
-    </select>
+    <label>
+        <select th:field="*{background}">
+            <option th:each="b : ${backgrounds}"
+                    th:value="${b}"
+                    th:text="${b.backgroundName}">
+            </option>
+        </select>
+    </label>
 
     <label>Weapons:</label>
-    <select th:field="*{weapons}" multiple size="5">
-        <option th:each="w : ${weapons}"
-                th:value="${w}"
-                th:text="${w.weaponName}">
-        </option>
-    </select>
+    <label>
+        <select th:field="*{weapons}" multiple size="5">
+            <option th:each="w : ${weapons}"
+                    th:value="${w}"
+                    th:text="${w.weaponName}">
+            </option>
+        </select>
+    </label>
 
 
     <button type="submit">Save Changes</button>

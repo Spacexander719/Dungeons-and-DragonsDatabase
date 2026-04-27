@@ -44,17 +44,6 @@
         </option>
     </select>
 
-    <label for="characterClass">Class:</label>
-    <select id="characterClass" name="characterClass">
-        <option value="">-- Select Class --</option>
-        <th:block th:each="c : ${classes}">
-            <option th:value="${c.className}"
-                    th:text="${c.className}"></option>
-        </th:block>
-    </select>
-    <br/><br/>
-
-
     <label>Species:</label>
     <select th:field="*{species}">
         <option th:each="s : ${species}"

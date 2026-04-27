@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -77,11 +78,22 @@ public class PlayerCharacterController {
 
         PlayerCharacter pc = characterRepo.findById(id).orElseThrow();
 
-        String className = pc.getCharacterClass().getClassName();
+        Classes selectedClass = pc.getCharacterClass();
+        if (selectedClass == null && !pc.getClasses().isEmpty()) {
+            selectedClass = pc.getClasses().get(0);
+            pc.setCharacterClass(selectedClass);
+        }
 
-        List<Spell> cantrips = spellRepo.findSpellsByClassAndLevel(className, 0);
-        List<Spell> level1spells = spellRepo.findSpellsByClassAndLevel(className, 1);
-        List<Spell> level2spells = spellRepo.findSpellsByClassAndLevel(className, 2);
+        List<Spell> cantrips = List.of();
+        List<Spell> level1spells = List.of();
+        List<Spell> level2spells = List.of();
+
+        if (selectedClass != null) {
+            String className = selectedClass.getClassName();
+            cantrips = spellRepo.findSpellsByClassAndLevel(className, 0);
+            level1spells = spellRepo.findSpellsByClassAndLevel(className, 1);
+            level2spells = spellRepo.findSpellsByClassAndLevel(className, 2);
+        }
 
         model.addAttribute("pc", pc);
         model.addAttribute("cantrips", cantrips);
@@ -107,9 +119,48 @@ public class PlayerCharacterController {
 
     // EDIT POST
     @PostMapping("/edit")
-    public String edit(@ModelAttribute PlayerCharacter pc) {
+    public String edit(@ModelAttribute PlayerCharacter pc,
+                       @RequestParam(value = "characterClass", required = false) String className) {
+        if (className != null && !className.isBlank()) {
+            Classes selectedClass = classRepo.findById(className).orElseThrow();
+            pc.setCharacterClass(selectedClass);
+        } else if (pc.getCharacterClass() == null && !pc.getClasses().isEmpty()) {
+            pc.setCharacterClass(pc.getClasses().get(0));
+        }
         characterRepo.save(pc);
         return "redirect:/characters/list";
+    }
+
+
+    // SAVE PREPARED SPELLS
+    @PostMapping("/{id}/prepareSpells")
+    public String savePreparedSpells(@PathVariable Integer id,
+                                     @RequestParam(value = "preparedCantrip", required = false) String preparedCantrip,
+                                     @RequestParam(value = "preparedLevel1", required = false) String preparedLevel1,
+                                     @RequestParam(value = "preparedLevel2", required = false) String preparedLevel2) {
+        PlayerCharacter pc = characterRepo.findById(id).orElseThrow();
+
+        List<Spell> preparedSpells = new ArrayList<>();
+        addPreparedSpell(preparedSpells, preparedCantrip);
+        addPreparedSpell(preparedSpells, preparedLevel1);
+        addPreparedSpell(preparedSpells, preparedLevel2);
+
+        pc.setPreparedSpells(preparedSpells);
+        characterRepo.save(pc);
+
+        return "redirect:/characters/" + id;
+    }
+
+
+    private void addPreparedSpell(List<Spell> preparedSpells, String spellName) {
+        if (spellName == null || spellName.isBlank()) {
+            return;
+        }
+
+        Spell spell = spellRepo.findById(spellName).orElseThrow();
+        if (!preparedSpells.contains(spell)) {
+            preparedSpells.add(spell);
+        }
     }
 
 

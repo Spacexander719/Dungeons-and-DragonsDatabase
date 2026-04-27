@@ -47,6 +47,11 @@
 
 <hr>
 
+<h2>Prepared Spells</h2>
+<ul>
+    <li th:each="s : ${pc.preparedSpells}" th:text="${s.spellName}"></li>
+</ul>
+
 <!-- ========================= -->
 <!--   PREPARED SPELLS SECTION -->
 <!-- ========================= -->

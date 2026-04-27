@@ -77,11 +77,22 @@ public class PlayerCharacterController {
 
         PlayerCharacter pc = characterRepo.findById(id).orElseThrow();
 
-        String className = pc.getCharacterClass().getClassName();
+        Classes selectedClass = pc.getCharacterClass();
+        if (selectedClass == null && !pc.getClasses().isEmpty()) {
+            selectedClass = pc.getClasses().get(0);
+            pc.setCharacterClass(selectedClass);
+        }
 
-        List<Spell> cantrips = spellRepo.findSpellsByClassAndLevel(className, 0);
-        List<Spell> level1spells = spellRepo.findSpellsByClassAndLevel(className, 1);
-        List<Spell> level2spells = spellRepo.findSpellsByClassAndLevel(className, 2);
+        List<Spell> cantrips = List.of();
+        List<Spell> level1spells = List.of();
+        List<Spell> level2spells = List.of();
+
+        if (selectedClass != null) {
+            String className = selectedClass.getClassName();
+            cantrips = spellRepo.findSpellsByClassAndLevel(className, 0);
+            level1spells = spellRepo.findSpellsByClassAndLevel(className, 1);
+            level2spells = spellRepo.findSpellsByClassAndLevel(className, 2);
+        }
 
         model.addAttribute("pc", pc);
         model.addAttribute("cantrips", cantrips);
@@ -107,7 +118,14 @@ public class PlayerCharacterController {
 
     // EDIT POST
     @PostMapping("/edit")
-    public String edit(@ModelAttribute PlayerCharacter pc) {
+    public String edit(@ModelAttribute PlayerCharacter pc,
+                       @RequestParam(value = "characterClass", required = false) String className) {
+        if (className != null && !className.isBlank()) {
+            Classes selectedClass = classRepo.findById(className).orElseThrow();
+            pc.setCharacterClass(selectedClass);
+        } else if (pc.getCharacterClass() == null && !pc.getClasses().isEmpty()) {
+            pc.setCharacterClass(pc.getClasses().get(0));
+        }
         characterRepo.save(pc);
         return "redirect:/characters/list";
     }

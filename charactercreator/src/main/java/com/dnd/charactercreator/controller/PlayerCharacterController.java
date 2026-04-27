@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -128,6 +129,38 @@ public class PlayerCharacterController {
         }
         characterRepo.save(pc);
         return "redirect:/characters/list";
+    }
+
+
+    // SAVE PREPARED SPELLS
+    @PostMapping("/{id}/prepareSpells")
+    public String savePreparedSpells(@PathVariable Integer id,
+                                     @RequestParam(value = "preparedCantrip", required = false) String preparedCantrip,
+                                     @RequestParam(value = "preparedLevel1", required = false) String preparedLevel1,
+                                     @RequestParam(value = "preparedLevel2", required = false) String preparedLevel2) {
+        PlayerCharacter pc = characterRepo.findById(id).orElseThrow();
+
+        List<Spell> preparedSpells = new ArrayList<>();
+        addPreparedSpell(preparedSpells, preparedCantrip);
+        addPreparedSpell(preparedSpells, preparedLevel1);
+        addPreparedSpell(preparedSpells, preparedLevel2);
+
+        pc.setPreparedSpells(preparedSpells);
+        characterRepo.save(pc);
+
+        return "redirect:/characters/" + id;
+    }
+
+
+    private void addPreparedSpell(List<Spell> preparedSpells, String spellName) {
+        if (spellName == null || spellName.isBlank()) {
+            return;
+        }
+
+        Spell spell = spellRepo.findById(spellName).orElseThrow();
+        if (!preparedSpells.contains(spell)) {
+            preparedSpells.add(spell);
+        }
     }
 
 
